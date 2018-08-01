@@ -51,8 +51,8 @@
         const lineWidth = 6;
         const lineHeight = 16;
         
-        let ballSpeedX = 1;
-        let ballSpeedY = 1;
+        let ballSpeedX = 3;
+        let ballSpeedY = 3;
         
         function player() {
             ctx.fillStyle = '#7FFF00';
@@ -70,6 +70,14 @@
             
             ballX += ballSpeedX;
             ballY += ballSpeedY;
+            
+            if (ballY <= 0 || ballY + ballSize >= ch) {
+                ballSpeedY = -ballSpeedY;
+            }
+            
+            if (ballX <= 0 || ballX + ballSize >= cw) {
+                ballSpeedX = -ballSpeedX;
+            }
         } 
         
         function table() {
@@ -86,9 +94,9 @@
         }
         function game() {
             table();
-        ball();
-        player();
-        ai();
+            ball();
+            player();
+            ai();
         }
         
         
