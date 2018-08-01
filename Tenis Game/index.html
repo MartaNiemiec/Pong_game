@@ -57,12 +57,12 @@
         function player() {
             ctx.fillStyle = '#7FFF00';
             ctx.fillRect(playerX, playerY, paddleWidth, paddleHeight);
-        }
+        };
         
         function ai() {
             ctx.fillStyle = 'yellow';
             ctx.fillRect(aiX, aiY, paddleWidth, paddleHeight);
-        }
+        };
         
         function ball() {
             ctx.fillStyle = 'white';
@@ -73,12 +73,14 @@
             
             if (ballY <= 0 || ballY + ballSize >= ch) {
                 ballSpeedY = -ballSpeedY;
+                speedUp();
             }
             
             if (ballX <= 0 || ballX + ballSize >= cw) {
                 ballSpeedX = -ballSpeedX;
+                speedUp();
             }
-        } 
+        };
         
         function table() {
             // table
@@ -90,7 +92,7 @@
                 ctx.fillStyle = 'gray';
                 ctx.fillRect(cw/2 - lineWidth/2, linePosition, lineWidth, lineHeight); 
             }
-        }
+        };
         
         topCanvas = canvas.offsetTop;   //The offsetTop read-only property of the VisualViewport interface returns the offset of the top edge of the visual viewport from the top edge of the layout viewport in CSS pixels.
         console.log(topCanvas);
@@ -106,16 +108,42 @@
             if (playerY <= 0) {
                 playerY = 0;
             }
+            
+            aiY = playerY;
+        };
+        
+        function speedUp() {
+//            console.log(ballSpeedX + ", " + ballSpeedY );
+            
+            // Speed x
+            if (ballSpeedX > 0 && ballSpeedX < 16) {
+                ballSpeedX += .4;
+            } else if (ballSpeedX < 0 && ballSpeedX < -16 ) {
+                ballSpeedX -= .4;
+            }
+            
+            // Speed Y
+            if (ballSpeedY > 0 && ballSpeedY < 16) {
+                ballSpeedY += .3;
+            } else if (ballSpeedY < 0 && ballSpeedY < -16 ) {
+                ballSpeedY -= .3;
+            }
+        };
+        
+        function aiPosition() {
+            
         };
         
         canvas.addEventListener('mousemove', playerPosition)    //mmouse moves inside canvas
             
+        
         
         function game() {
             table();
             ball();
             player();
             ai();
+            aiPosition();
         }
         
         
