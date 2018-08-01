@@ -90,8 +90,27 @@
                 ctx.fillStyle = 'gray';
                 ctx.fillRect(cw/2 - lineWidth/2, linePosition, lineWidth, lineHeight); 
             }
-            
         }
+        
+        topCanvas = canvas.offsetTop;   //The offsetTop read-only property of the VisualViewport interface returns the offset of the top edge of the visual viewport from the top edge of the layout viewport in CSS pixels.
+        console.log(topCanvas);
+        
+        function playerPosition(e) {    //e is showing informations in the cosole about the event, we need to know "ClientX" and "ClientY" but those poition are in the window-not inside a canvas
+//            console.log('pozycja myszy to ' + (e.clientY - topCanvas));
+            playerY = e.clientY - topCanvas - paddleHeight/2;
+            
+            if (playerY >= ch - paddleHeight) {
+                playerY = ch - paddleHeight;
+            }
+            
+            if (playerY <= 0) {
+                playerY = 0;
+            }
+        };
+        
+        canvas.addEventListener('mousemove', playerPosition)    //mmouse moves inside canvas
+            
+        
         function game() {
             table();
             ball();
