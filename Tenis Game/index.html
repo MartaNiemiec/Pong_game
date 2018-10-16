@@ -194,7 +194,6 @@
 
     canvas.addEventListener("mousemove", playerPosition)
     
-
     function game() {
         table()
         ball()
@@ -202,8 +201,25 @@
         ai()
         aiPosition()
     }
+  
+    function gameInterval() {
+        window.setInterval(game, 1000 / 60);
+    }
 
-    setInterval(game, 1000 / 60)
+    function init() {
+        canvas.removeEventListener('click', init);
+        gameInterval() 
+    }
+
+    function clickToStart() {
+        canvas.addEventListener('click', init);
+    }
+
+    function start(){
+        game()
+        clickToStart()
+    }
+    start()
 
     </script>
 </body>
