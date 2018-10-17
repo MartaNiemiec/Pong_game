@@ -5,24 +5,79 @@
     <title>Tenis gra w JavaScript</title>
     
     <style>
-        body {
+        @font-face {
+            font-family: Digital;
+            src: url(digital-7.ttf);
+        }
+
+        * {
             margin: 0;
             padding: 0;
+        }
+        body {
+            
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: darkgray;
+            background: linear-gradient(to bottom, #7DC7EF, #f2fcfe);
         }
         canvas {    /*nie uzywac css do canvasa, szczegolnie do okreslania wielkosci*/
 /*            background-color: white;*/
-            border: 1px solid #fff;    
+            border: 5px solid #C9FFD9; 
+            position: relative;   
         }
+
+        #players {
+            padding-left: 3vh;
+            padding-bottom: 1vh;
+            width: 1000px;
+            display: flex;
+            justify-content: space-around; 
+            font-size: 3vh;
+            font-weight: bold;
+            color: #006477;
+        }    
+        
+        #score {
+            margin: 1vh;
+            width: 1000px;
+            display: flex;
+            justify-content: space-around; 
+            font-family: 'Digital';
+            font-size: 5vh;
+            font-weight: bold;
+            letter-spacing: .3em;
+            
+        }
+
+        .score__player, .score__ai {
+            color: #FF1654;
+        }
+
+        .score__bg {
+            background-color: #081A22;
+            border-radius: 8px;
+            padding: 1vh 1vh 1vh 2vh;
+            box-shadow: 5px 10px 18px #888888;
+            margin-bottom: 3vh;
+        }
+      
         
     </style>
     
 </head>
 <body>
+    <div id="players">
+            <h1 class="player">Player</h1>
+            <h1 class="ai">Computer</h1>
+    </div>
+    <div id="score">
+            <div class="score__bg"><h1 class="score__player">15</h1></div>
+            <div class="score__bg"><h1 class="score__ai">06</h1></div>
+    </div>
+
     <canvas></canvas>
     
     <script>
@@ -58,12 +113,12 @@
 
 // DRAWING PADDLES
     function player() {
-        ctx.fillStyle = '#7FFF00';
+        ctx.fillStyle = '#68FF95';
         ctx.fillRect(playerX, playerY, paddleWidth, paddleHeight);
     }
 
     function ai() {
-        ctx.fillStyle = 'yellow';
+        ctx.fillStyle = '#FFF966';
         ctx.fillRect(aiX, aiY, paddleWidth, paddleHeight);
     }
 
@@ -121,11 +176,11 @@
 
 // DRAWING TABLE
     function table() {
-        ctx.fillStyle = '#222';
+        ctx.fillStyle = '#0E2E3C';
         ctx.fillRect(0, 0, cw, ch);
 
         for (let linePosition = 20; linePosition < ch; linePosition += 30) {
-        ctx.fillStyle = "gray"
+        ctx.fillStyle = "#C9FFD9"
         ctx.fillRect(cw / 2 - lineWidth / 2, linePosition, lineWidth, lineHeight)
         }
 
@@ -134,8 +189,14 @@
 // BALL'S MOVES
     function ball() {
     // DRAW BALL
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(ballX, ballY, ballSize, ballSize);
+        // ctx.fillStyle = '#FCFCF3';
+        // ctx.fillRect(ballX, ballY, ballSize, ballSize);
+        ctx.fillStyle = "#FFF"; //red
+        ctx.beginPath();
+        ctx.arc(ballX+ballSize/2,ballY+ballSize/2,ballSize/2,ballSize,Math.PI*2,true);
+        ctx.closePath();
+        ctx.fill();
+
     
     // BALL SPEED
         ballX += ballSpeedX;
@@ -212,19 +273,30 @@
         canvas.addEventListener('click', init);
     }
 
+    
     let playerScore = 0;
     let aiScore = 0;
+    const playerScoreText = document.querySelector('.score__player');
+    const aiScoreText = document.querySelector('.score__ai');
+
+    function schowScore () {
+        
+        playerScoreText.textContent = playerScore >= 10 ? playerScore : '0'+playerScore;
+        aiScoreText.textContent = aiScore>= 10 ? aiScore : '0' + aiScore;;
+    }
+
     
     function newRound() {
         canvas.addEventListener('click', start)
         
     }
-
+ 
     function addScore() {
         
         if (ballX + ballSize <= 0) {
             clearInterval(int)
             aiScore++;
+            schowScore()
             console.log(`player score: ${playerScore}`)
             console.log(`ai score: ${aiScore}`)
             ballX = cw / 2 - ballSize / 2;
@@ -236,6 +308,7 @@
         } else if (ballX + ballSize >= cw) {
             clearInterval(int)
             playerScore++;
+            schowScore()
             console.log(`player score: ${playerScore}`)
             console.log(`ai score: ${aiScore}`)
             ballX = cw / 2 - ballSize / 2;
@@ -259,6 +332,7 @@
     }
 
     function start() {
+        schowScore()
         canvas.removeEventListener('click', start)
         game()
         clickToStart()
