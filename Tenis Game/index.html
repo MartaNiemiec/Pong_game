@@ -62,6 +62,13 @@
         ctx.fillRect(playerX, playerY, paddleWidth, paddleHeight);
     }
 
+    function ai() {
+        ctx.fillStyle = 'yellow';
+        ctx.fillRect(aiX, aiY, paddleWidth, paddleHeight);
+    }
+
+    
+    
 // MOVE PADDLES
     function playerPosition(e) {
         playerY = e.clientY - topCanvas - paddleHeight / 2;
@@ -74,86 +81,6 @@
         playerY = 0;
         }
     }
-
-    function ai() {
-        ctx.fillStyle = 'yellow';
-        ctx.fillRect(aiX, aiY, paddleWidth, paddleHeight);
-    }
-
-// DRAWING TABLE
-    function table() {
-        ctx.fillStyle = '#222';
-        ctx.fillRect(0, 0, cw, ch);
-
-        for (let linePosition = 20; linePosition < ch; linePosition += 30) {
-        ctx.fillStyle = "gray"
-        ctx.fillRect(cw / 2 - lineWidth / 2, linePosition, lineWidth, lineHeight)
-        }
-
-    }
-
-// BALL'S MOVES
-    function ball() {
-    // DRAW BALL
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(ballX, ballY, ballSize, ballSize);
-    
-    // BALL SPEED
-        ballX += ballSpeedX;
-        ballY += ballSpeedY;
-    
-    // MOVING BALL
-        if (ballY <= 0 || ballY + ballSize >= ch) {
-        ballSpeedY = -ballSpeedY;
-        speedUp();
-        }
-        
-        if (ballX <= 0 || ballX + ballSize >= cw) {
-        ballSpeedX = -ballSpeedX;
-        speedUp();
-        }
-        
-    // BALL COLLISION WITH PADDLES
-        if (ballX <= playerX + paddleWidth && 
-            ballY >= playerY && 
-            ballY + ballSize <= playerY + paddleHeight ) { 
-        
-            ballSpeedX = -ballSpeedX;
-            speedUp();
-        } 
-        
-        if (ballX  >= aiX - paddleWidth && 
-            ballY >= aiY - ballSize && 
-            ballY <= aiY + paddleHeight) {
-        
-            
-            ballSpeedX = -ballSpeedX;
-            speedUp();
-        } 
-        
-    };
-
-    topCanvas = canvas.offsetTop;
-
-
-    function speedUp() {
-        if (ballSpeedX > 0 && ballSpeedX < 8) {
-        ballSpeedX += .4;
-        } else if (ballSpeedX < 0 && ballSpeedX > -8) {
-        ballSpeedX -= .4;
-        }
-
-        
-        if (ballSpeedY > 0 && ballSpeedY < 8) {
-        ballSpeedY += .4;
-        } else if (ballSpeedY < 0 && ballSpeedY > -8) {
-        ballSpeedY -= .4;
-        }
-
-        console.log(ballSpeedX + ", " + ballSpeedY)
-    }
-
-    /*-----------SZTUCZNA INTELIGENCJA----------*/
 
     function aiPosition() {
         const middlePaddle= aiY + paddleHeight / 2 ;
@@ -192,6 +119,71 @@
         }
     }
 
+// DRAWING TABLE
+    function table() {
+        ctx.fillStyle = '#222';
+        ctx.fillRect(0, 0, cw, ch);
+
+        for (let linePosition = 20; linePosition < ch; linePosition += 30) {
+        ctx.fillStyle = "gray"
+        ctx.fillRect(cw / 2 - lineWidth / 2, linePosition, lineWidth, lineHeight)
+        }
+
+    }
+
+// BALL'S MOVES
+    function ball() {
+    // DRAW BALL
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(ballX, ballY, ballSize, ballSize);
+    
+    // BALL SPEED
+        ballX += ballSpeedX;
+        ballY += ballSpeedY;
+    
+    // MOVING BALL
+        if (ballY <= 0 || ballY + ballSize >= ch) {
+        ballSpeedY = -ballSpeedY;
+        speedUp();
+        }
+        
+    // BALL COLLISION WITH PADDLES
+        if (ballX <= playerX + paddleWidth && 
+            ballY >= playerY && 
+            ballY + ballSize <= playerY + paddleHeight ) { 
+        
+            ballSpeedX = -ballSpeedX;
+            speedUp();
+        } 
+        
+        if (ballX  >= aiX - paddleWidth && 
+            ballY >= aiY - ballSize && 
+            ballY <= aiY + paddleHeight) {
+        
+            
+            ballSpeedX = -ballSpeedX;
+            speedUp();
+        } 
+    };
+
+    topCanvas = canvas.offsetTop;
+
+
+    function speedUp() {
+        if (ballSpeedX > 0 && ballSpeedX < 8) {
+        ballSpeedX += .4;
+        } else if (ballSpeedX < 0 && ballSpeedX > -8) {
+        ballSpeedX -= .4;
+        }
+
+        
+        if (ballSpeedY > 0 && ballSpeedY < 8) {
+        ballSpeedY += .4;
+        } else if (ballSpeedY < 0 && ballSpeedY > -8) {
+        ballSpeedY -= .4;
+        }
+    }
+
     canvas.addEventListener("mousemove", playerPosition)
     
     function game() {
@@ -202,8 +194,13 @@
         aiPosition()
     }
   
+  let int;
+
     function gameInterval() {
-        window.setInterval(game, 1000 / 60);
+        int =  setInterval(function() {
+            game()
+            addScore()
+        }, 1000 / 60);
     }
 
     function init() {
@@ -215,10 +212,61 @@
         canvas.addEventListener('click', init);
     }
 
-    function start(){
+    let playerScore = 0;
+    let aiScore = 0;
+    
+    function newRound() {
+        canvas.addEventListener('click', start)
+        
+    }
+
+    function addScore() {
+        
+        if (ballX + ballSize <= 0) {
+            clearInterval(int)
+            aiScore++;
+            console.log(`player score: ${playerScore}`)
+            console.log(`ai score: ${aiScore}`)
+            ballX = cw / 2 - ballSize / 2;
+            ballY = ch / 2 - ballSize / 2;
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+            resetGame()
+            clickToStart()
+        } else if (ballX + ballSize >= cw) {
+            clearInterval(int)
+            playerScore++;
+            console.log(`player score: ${playerScore}`)
+            console.log(`ai score: ${aiScore}`)
+            ballX = cw / 2 - ballSize / 2;
+            ballY = ch / 2 - ballSize / 2;
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+            resetGame()
+            clickToStart()
+        }
+        
+    }
+
+    function resetGame() {
+        ballSpeedX = 4
+        ballSpeedY = 4
+        ballY = ch/2 - ballSize/2
+        ballX = cw/2 - ballSize/2
+        playerY = 200
+        aiY=200
+        game()
+    }
+
+    function start() {
+        canvas.removeEventListener('click', start)
         game()
         clickToStart()
+        // addScore()
+        console.log(`player score: ${playerScore}`)
+        console.log(`ai score: ${aiScore}`)
     }
+
     start()
 
     </script>
