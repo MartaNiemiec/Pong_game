@@ -80,18 +80,25 @@
     <canvas></canvas>
     
     <script>
+
 // CANVAS
     const canvas = document.querySelector('canvas');
+    const playerScoreText = document.querySelector('.score__player');
+    const aiScoreText = document.querySelector('.score__ai');
+
     const ctx = canvas.getContext('2d');
     canvas.width = 900;
     canvas.height = 400;
     const cw = canvas.width;
     const ch = canvas.height;
+    const cwHalf = cw/2;
+    const chHalf = ch/2;
+    const topCanvas = canvas.offsetTop;
 
 // BALL
     const ballRadius = 10;
-    let ballX = cw / 2;
-    let ballY = ch / 2;
+    let ballX = cwHalf;
+    let ballY = chHalf;
     let ballSpeedX = 4;
     let ballSpeedY = 4;
 
@@ -102,13 +109,14 @@
     let playerY = 150;
     let aiY = 150;
 
-// MIDDLE LINE
-    const lineWidth = 6;
-    const lineHeight = 16;
-
 // PADDLES
     const paddleHeight = 90;
     const paddleWidth = 15;
+
+    let playerScore = 0;
+    let aiScore = 0;
+
+    let int;
 
 // DRAWING PADDLES
     function player() {
@@ -121,16 +129,16 @@
         ctx.fillRect(aiX, aiY, paddleWidth, paddleHeight);
     }
 
-    
-    
 // MOVE PADDLES
     function playerPosition(e) {
         playerY = e.clientY - topCanvas - paddleHeight / 2;
-
+        
+        // prevent paddle from getting outside of the BOTTOM of the canvas 
         if (playerY >= ch - paddleHeight) {
         playerY = ch - paddleHeight;
         }
 
+        // prevent paddle from getting outside of the TOP of the canvas
         if (playerY <= 0) {
         playerY = 0;
         }
@@ -139,7 +147,8 @@
     function aiPosition() {
         const middlePaddle = aiY + paddleHeight / 2 ;
         
-        if (ballX > cw/2) {         
+        // when the ball is on the ai side 
+        if (ballX > cwHalf) {         
             if (middlePaddle - ballY > 180) {
                 aiY -= 15; 
             } else if (middlePaddle - ballY > 40) {
@@ -149,9 +158,10 @@
             } else if (middlePaddle - ballY < -40) {
                 aiY += 7;
             }
-            }
-            
-            if (ballX <= cw/2 && ballX > 90) {
+        }
+
+        // when the ball is on the player's side 
+        if (ballX <= cwHalf && ballX > 90) {
             if (middlePaddle - ballY > 90) {
                 aiY -= 3;
             } 
@@ -159,35 +169,39 @@
             if (middlePaddle - ballY < -90) {
                 aiY += 3;
             }
-            }
-        
-            //gdy próbuje wyjachać rakietka na dole poza canvas
-            if (aiY >= ch - paddleHeight) {
+        }
+    
+        // when the paddle goes outside of the bottom of the canvas
+        if (aiY >= ch - paddleHeight) {
             aiY = ch - paddleHeight;
-            }
-
-            //gdy próbuje wyjachać rakietka na górze poza canvas
-            if (aiY <= 0) {
-            aiY = 0;
-            }
         }
 
-    // DRAWING TABLE
-        function table() {
-            ctx.fillStyle = '#0E2E3C';
-            ctx.fillRect(0, 0, cw, ch);
-
-            for (let linePosition = 20; linePosition < ch; linePosition += 30) {
-            ctx.fillStyle = "#C9FFD9";
-            ctx.fillRect(cw / 2 - lineWidth / 2, linePosition, lineWidth, lineHeight);
-            }
-
+        // when the paddle goes outside of the top of the canvas
+        if (aiY <= 0) {
+            aiY = 0;
+        }
     }
+
+// DRAWING TABLE
+    function table() {
+        ctx.fillStyle = '#0E2E3C';
+        ctx.fillRect(0, 0, cw, ch);
+
+        // MIDDLE LINE
+        const lineWidth = 6;
+        const lineHeight = 16;
+        
+        for (let linePosition = 20; linePosition < ch; linePosition += 30) {
+        ctx.fillStyle = "#C9FFD9";
+        ctx.fillRect(cwHalf - lineWidth / 2, linePosition, lineWidth, lineHeight);
+        }
+    }
+
 
 // BALL'S MOVES
     function ball() {
     // DRAW BALL
-        ctx.fillStyle = "#FFF"; //red
+        ctx.fillStyle = "#FFF"; 
         ctx.beginPath();
         ctx.arc(ballX, ballY, ballRadius, 0, Math.PI*2, true);  //context.arc(x,y,r,sAngle,eAngle,counterclockwise);
         ctx.closePath();
@@ -195,10 +209,9 @@
 
     
     // BALL SPEED
-        ballX += ballSpeedX;
-        ballY += ballSpeedY;
+        ballSpeed();
     
-    // MOVING BALL
+    // BALL COLLISION WITH TOP AND BOTTOM OF THE CANVAS
         if (ballY - ballRadius < 0 || ballY + ballRadius > ch) {
         ballSpeedY = -ballSpeedY;
         speedUp();
@@ -217,41 +230,38 @@
             ballY >= aiY && 
             ballY <= aiY + paddleHeight) {
         
-            
             ballSpeedX = -ballSpeedX;
             speedUp();
         } 
     };
 
-    topCanvas = canvas.offsetTop;
+// BALL SPEED
+    function ballSpeed() {
+        ballX += ballSpeedX;
+        ballY += ballSpeedY;
+    }
 
+// START POSITION OF THE BALL
+    function ballStartPosition() {
+        ballY = chHalf;
+        ballX = cwHalf;
+    }
 
     function speedUp() {
         if (ballSpeedX > 0 && ballSpeedX < 8) {
-        ballSpeedX += .4;
+            ballSpeedX += .4;
         } else if (ballSpeedX < 0 && ballSpeedX > -8) {
-        ballSpeedX -= .4;
+            ballSpeedX -= .4;
         }
 
         if (ballSpeedY > 0 && ballSpeedY < 8) {
-        ballSpeedY += .4;
+            ballSpeedY += .4;
         } else if (ballSpeedY < 0 && ballSpeedY > -8) {
-        ballSpeedY -= .4;
+            ballSpeedY -= .4;
         }
     }
 
-    canvas.addEventListener("mousemove", playerPosition)
-    
-    function game() {
-        table();
-        ball();
-        player();
-        ai();
-        aiPosition();
-    }
-  
-  let int;
-
+// SET INTERVAL
     function gameInterval() {
         int =  setInterval(() => {
             game();
@@ -259,69 +269,69 @@
         }, 1000 / 60);
     }
 
-    function init() {
-        canvas.removeEventListener('click', init);
-        gameInterval() ;
-    }
-
+// CLICK TO START THE GAME
     function clickToStart() {
         canvas.addEventListener('click', init);
     }
 
-    
-    let playerScore = 0;
-    let aiScore = 0;
-    const playerScoreText = document.querySelector('.score__player');
-    const aiScoreText = document.querySelector('.score__ai');
+// PREVENT FROM CLICKING TO START THE GAME AGAIN AND SET INTERVAL
+    function init() {
+        canvas.removeEventListener('click', init);
+        gameInterval();
+    }
 
+// SHOW SCORE
     function schowScore () {
         playerScoreText.textContent = playerScore >= 10 ? playerScore : '0'+playerScore;
         aiScoreText.textContent = aiScore>= 10 ? aiScore : '0' + aiScore;
     }
 
-    
+// SET EVERYTHING FOR THE NEW ROUND
     function newRound() {
-        canvas.addEventListener('click', start);
+        schowScore();
+        ballSpeed();
+        resetGame();
+        clickToStart();
     }
 
-
+// ADD SCORE 
     function addScore() {
-        
+
+        // add scor for the ai
         if (ballX - ballRadius <= 0) {
             clearInterval(int);
             aiScore++;
-            schowScore();
-            ballX = cw / 2;
-            ballY = ch / 2;
-            ballX += ballSpeedX;
-            ballY += ballSpeedY;
-            resetGame();
-            clickToStart();
+            newRound();
+        // add scor for the player
         } else if (ballX + ballRadius >= cw) {
-            console.log(aiX);
-            clearInterval(int)
+            clearInterval(int);
             playerScore++;
-            schowScore()
-            ballX = cw / 2;
-            ballY = ch / 2;
-            ballX += ballSpeedX;
-            ballY += ballSpeedY;
-            resetGame();
-            clickToStart();
+            newRound();
         }
     }
 
+// SET EVERYTHING ON THE CANVAS IN THE INITIAL PLACE
     function resetGame() {
         ballSpeedX = 4;
         ballSpeedY = 4;
-        ballY = ch/2;
-        ballX = cw/2;
+        ballStartPosition();
         playerY = 150;
         aiY = 150;
         game();
     }
 
+// GAME DRAWING 
+    function game() {
+        table();
+        ball();
+        player();
+        ai();
+        aiPosition();
+    }
+
+// START THE GAME
     function start() {
+        canvas.addEventListener("mousemove", playerPosition);
         schowScore();
         canvas.removeEventListener('click', start);
         game();
