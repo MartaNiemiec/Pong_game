@@ -255,4 +255,4 @@ function start() {
     clickToStart();
 }
 
-start();
+    start();

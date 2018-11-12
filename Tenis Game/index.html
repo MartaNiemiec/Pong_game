@@ -4,67 +4,7 @@
     <meta charset="UTF-8">
     <title>Tenis gra w JavaScript</title>
     
-    <style>
-        @font-face {
-            font-family: Digital;
-            src: url(digital-7.ttf);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: linear-gradient(to bottom, #7DC7EF, #f2fcfe);
-        }
-        canvas {    /*nie uzywac css do canvasa, szczegolnie do okreslania wielkosci*/
-/*            background-color: white;*/
-            border: 5px solid #C9FFD9; 
-        }
-
-        #players {
-            padding-left: 3vh;
-            padding-bottom: 1vh;
-            width: 1000px;
-            display: flex;
-            justify-content: space-around; 
-            font-size: 2vh;
-            font-weight: bold;
-            color: #006477;
-        }    
-        
-        #score {
-            margin: 1vh;
-            width: 1000px;
-            display: flex;
-            justify-content: space-around; 
-            font-family: 'Digital';
-            font-size: 3vh;
-            font-weight: bold;
-            letter-spacing: .3em;
-            
-        }
-
-        .score__player, .score__ai {
-            color: #FF1654;
-        }
-
-        .score__bg {
-            background-color: #081A22;
-            border-radius: 8px;
-            padding: 1vh 1vh 1vh 2vh;
-            box-shadow: 5px 10px 18px #888888;
-            margin-bottom: 1vh;
-        }
-      
-        
-    </style>
+    <link rel="stylesheet" href="style.css">
     
 </head>
 <body>
