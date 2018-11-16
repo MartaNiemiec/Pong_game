@@ -71,6 +71,7 @@ canvas {
   font-size: 1.8rem;
   letter-spacing: .5rem;
   text-shadow: 3px 5px 8px #0201013f;
+  display: none;
 }
 
 .welcome h1 {
