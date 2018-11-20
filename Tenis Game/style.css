@@ -8,7 +8,6 @@
   padding: 0;
 }
 body {
-  
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -71,7 +70,6 @@ canvas {
   font-size: 1.8rem;
   letter-spacing: .5rem;
   text-shadow: 3px 5px 8px #0201013f;
-  display: none;
 }
 
 .welcome h1 {
@@ -102,9 +100,10 @@ button {
   box-shadow: 3px 10px 12px #0201013f;
 }
 
-button:hover,
-button:active,
-button:focus {
+ button:hover
+/*button:active,
+button:focus  */
+{
   border: 3px solid white;
   background-color: transparent;
   color: #fff;
@@ -112,6 +111,15 @@ button:focus {
   box-shadow: none;
 
 }
+
+.btnActive {
+  border: 3px solid white;
+  background-color: transparent;
+  color: #fff;
+  transform: translateY(3px);
+  box-shadow: none;
+
+} 
 
 .btn-start {
   margin-top: 2rem;
@@ -130,7 +138,7 @@ button:focus {
 .btn-start:hover,
 .btn-start:active,
 .btn-start:focus {
-  /* padding-left: 13px; */
+  padding-left: 13px;
 }
 
 input {
@@ -148,6 +156,11 @@ input {
   letter-spacing: .5rem;
   display: flex;
   
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }
 
 input:focus {

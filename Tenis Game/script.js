@@ -34,6 +34,14 @@ let playerScore = 0;
 let aiScore = 0;
 
 let int;
+let aiAccelerating = {
+    slow: 0,
+    medium: 0,
+    fast: 0
+}
+
+// WINNING SCORE
+let winningScore;
 
 // DRAWING PADDLES
 function player() {
@@ -61,30 +69,38 @@ function playerPosition(e) {
     }
 }
 
+
+
 function aiPosition() {
     const middlePaddle = aiY + paddleHeight / 2 ;
     
     // when the ball is on the ai side 
     if (ballX > cwHalf) {         
         if (middlePaddle - ballY > 180) {
-            aiY -= 15; 
+            aiY -= aiAccelerating.fast; 
+            // aiY -= 15; 
         } else if (middlePaddle - ballY > 40) {
-            aiY -= 7;
+            aiY -= aiAccelerating.medium;
+            // aiY -= 7;
         } else if (middlePaddle - ballY < -180) {
-            aiY += 15;
+            aiY += aiAccelerating.fast;
+            // aiY += 15;
         } else if (middlePaddle - ballY < -40) {
-            aiY += 7;
+            aiY += aiAccelerating.medium;
+            // aiY += 7;
         }
     }
 
     // when the ball is on the player's side 
     if (ballX <= cwHalf && ballX > 90) {
         if (middlePaddle - ballY > 90) {
-            aiY -= 3;
+            aiY -= aiAccelerating.slow;
+            // aiY -= 3;
         } 
         
         if (middlePaddle - ballY < -90) {
-            aiY += 3;
+            aiY += aiAccelerating.slow;
+            // aiY += 3;
         }
     }
 
@@ -255,4 +271,69 @@ function start() {
     clickToStart();
 }
 
-    start();
+
+// POPUP
+    // choosing game level
+    function gameLevel() {
+        const button = document.getElementsByClassName('btn');
+
+        for (var i = 0; i < button.length; i++) {
+            button[i].addEventListener("click", function() {
+            var current = document.getElementsByClassName("btnActive");
+            current[0].className = current[0].className.replace(" btnActive", "");
+            this.className += " btnActive";
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            const target = e.target;
+            const level = target.dataset.level;
+            
+            if ( level === 'easy') { 
+                aiAccelerating.slow = 2;
+                aiAccelerating.medium = 5;
+                aiAccelerating.fast = 12;
+            } else if (level === 'medium') {
+                aiAccelerating.slow = 3;
+                aiAccelerating.medium = 7;
+                aiAccelerating.fast = 15;
+            } else if (level === 'expert') {
+                aiAccelerating.slow = 4;
+                aiAccelerating.medium = 9;
+                aiAccelerating.fast = 18;
+            }
+        })
+    }
+
+    // seting up winning score
+    function points() {
+        const input = document.querySelector('input[name=scoring]');
+        input.addEventListener('input', () => {
+        winningScore = input.value; 
+        // console.log(winningScore);
+        })
+    }
+
+    // starting game on button start click
+    function startGame() {
+        const startButton = document.querySelector('.btn-start'); 
+
+        startButton.addEventListener('click', () => {
+            if (aiAccelerating.slow > 0 && winningScore > 0){
+                const popup = document.querySelector('.welcome');
+                popup.style.display = "none";
+            }
+        })
+    }
+
+    function startingPopup() {
+        gameLevel();
+        points();
+        startGame();
+        start();
+    }
+
+    
+startingPopup();
+
+
