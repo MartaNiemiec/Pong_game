@@ -16,8 +16,8 @@ const topCanvas = canvas.offsetTop;
 const ballRadius = 10;
 let ballX = cwHalf;
 let ballY = chHalf;
-let ballSpeedX = 4;
-let ballSpeedY = 4;
+let ballSpeedX = (3.5+Math.random()) * ((3.5+Math.random()) < 4 ? -1 : 1); // between 3.5 and 4.5 ; positive or negative 
+let ballSpeedY = ballSpeedX;
 
 //PLAYERS
 const playerX = 50;
@@ -39,6 +39,8 @@ let aiAccelerating = {
     medium: 0,
     fast: 0
 }
+
+let ballMaxSpeed = 0;
 
 // WINNING SCORE
 let winningScore;
@@ -152,16 +154,16 @@ function ball() {
     
 // BALL COLLISION WITH PADDLES
     if (ballX - ballRadius <= playerX + paddleWidth && 
-        ballY >= playerY && 
-        ballY <= playerY + paddleHeight) { 
+        ballY >= playerY - ballRadius && 
+        ballY <= playerY + paddleHeight + ballRadius) { 
     
         ballSpeedX = -ballSpeedX;
         speedUp();
     } 
     
     if (ballX + ballRadius  >= aiX && 
-        ballY >= aiY && 
-        ballY <= aiY + paddleHeight) {
+        ballY >= aiY - ballRadius && 
+        ballY <= aiY + paddleHeight + ballRadius) {
     
         ballSpeedX = -ballSpeedX;
         speedUp();
@@ -181,15 +183,17 @@ function ballStartPosition() {
 }
 
 function speedUp() {
-    if (ballSpeedX > 0 && ballSpeedX < 8) {
+    if (ballSpeedX > 0 && ballSpeedX < ballMaxSpeed) {
         ballSpeedX += .4;
-    } else if (ballSpeedX < 0 && ballSpeedX > -8) {
+        
+    } else if (ballSpeedX < 0 && ballSpeedX > -ballMaxSpeed) {
         ballSpeedX -= .4;
+        
     }
 
-    if (ballSpeedY > 0 && ballSpeedY < 8) {
+    if (ballSpeedY > 0 && ballSpeedY < ballMaxSpeed) {
         ballSpeedY += .4;
-    } else if (ballSpeedY < 0 && ballSpeedY > -8) {
+    } else if (ballSpeedY < 0 && ballSpeedY > -ballMaxSpeed) {
         ballSpeedY -= .4;
     }
 }
@@ -245,8 +249,8 @@ function addScore() {
 
 // SET EVERYTHING ON THE CANVAS IN THE INITIAL PLACE
 function resetGame() {
-    ballSpeedX = 4;
-    ballSpeedY = 4;
+    ballSpeedX = (3.5+Math.random()) * ((3.5+Math.random()) < 4 ? -1 : 1);;
+    ballSpeedY = ballSpeedX;
     ballStartPosition();
     playerY = 150;
     aiY = 150;
@@ -275,33 +279,42 @@ function start() {
 // POPUP
     // choosing game level
     function gameLevel() {
-        const button = document.getElementsByClassName('btn');
+        const buttons = document.getElementsByClassName('btn');
 
-        for (var i = 0; i < button.length; i++) {
-            button[i].addEventListener("click", function() {
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", function() {
             var current = document.getElementsByClassName("btnActive");
-            current[0].className = current[0].className.replace(" btnActive", "");
-            this.className += " btnActive";
+            if (current.length > 0) { 
+                current[0].className = current[0].className.replace(" btnActive", "");
+              }
+              this.className += " btnActive";
             });
         }
 
         document.addEventListener('click', function(e) {
             const target = e.target;
             const level = target.dataset.level;
+
             
             if ( level === 'easy') { 
                 aiAccelerating.slow = 2;
-                aiAccelerating.medium = 5;
-                aiAccelerating.fast = 12;
+                aiAccelerating.medium = 4;
+                aiAccelerating.fast = 10;
+                ballMaxSpeed = 6;
             } else if (level === 'medium') {
                 aiAccelerating.slow = 3;
                 aiAccelerating.medium = 7;
                 aiAccelerating.fast = 15;
+                ballMaxSpeed = 8;
             } else if (level === 'expert') {
                 aiAccelerating.slow = 4;
                 aiAccelerating.medium = 9;
                 aiAccelerating.fast = 18;
+                ballMaxSpeed = 10;
             }
+            console.log(aiAccelerating);
+            console.log("ballSpeedX " + ballSpeedX);
+            console.log("ballSpeedY " + ballSpeedY);
         })
     }
 

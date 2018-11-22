@@ -13,7 +13,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: linear-gradient(to bottom, #7DC7EF, #f2fcfe);
+  background: linear-gradient(to bottom, #7DC7EF, #99ddff);
 }
 canvas {    
   border: 5px solid #C9FFD9; 
