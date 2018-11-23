@@ -8,7 +8,6 @@
   padding: 0;
 }
 body {
-  
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,6 +18,13 @@ body {
 canvas {    
   border: 5px solid #C9FFD9; 
 }
+
+
+::selection {
+  background-color: rgb(102, 224, 255);
+  color: #fff;
+}
+
 
 #players {
   padding-left: 3vh;
@@ -55,12 +61,80 @@ canvas {
   margin-bottom: 1vh;
 }
 
+
+.winner {
+  background-image: url("img/pattern.png");
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  color: #CF0B0B;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  transition: all .6s;
+  transform: scale(0,0) rotate(720deg);
+}
+
+.winner h1 {
+  
+  font-weight: 900;
+  text-shadow: 3px 10px 12px #0201013f;
+  text-transform: uppercase;
+}
+.winner__title {
+  font-family: 'Digital';
+  letter-spacing: 1rem;
+  color: #66e0ff;
+  font-size: 5rem;
+  font-style: italic;
+}
+
+.winner__trophy {
+  font-weight: 900;
+  font-size: 8rem;
+  text-shadow: 3px 10px 12px #0201013f;
+  color: gold;
+}
+
+.winner__trophy:first-child {
+  transform: rotate(-15deg);
+}
+
+.winner__trophy:last-child {
+  transform: rotate(15deg);
+}
+
+.winner i {
+  font-size: 8rem;
+  color: rgb(255, 217, 0);
+  padding: 3rem 0;
+}
+
+.winner__display {
+  color: #24FFA7;
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 4rem;
+}
+
+
+
+
 .welcome {
   background-image: url("img/pattern.png");
   position: absolute;
   width: 100vw;
   height: 100vh;
   color: #fff;
+
+  transition: all .6s;
+  /* transform: scale(0,0); */
+
 
   display: grid;
   grid-gap: 20px;
@@ -71,7 +145,6 @@ canvas {
   font-size: 1.8rem;
   letter-spacing: .5rem;
   text-shadow: 3px 5px 8px #0201013f;
-  display: none;
 }
 
 .welcome h1 {
@@ -102,16 +175,26 @@ button {
   box-shadow: 3px 10px 12px #0201013f;
 }
 
-button:hover,
-button:active,
-button:focus {
+
+ button:hover {
+
+  border: 3px solid white;
+  background-color: transparent;
+  color: #fff;
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+
+.btnActive {
   border: 3px solid white;
   background-color: transparent;
   color: #fff;
   transform: translateY(3px);
   box-shadow: none;
 
-}
+} 
+
 
 .btn-start {
   margin-top: 2rem;
@@ -130,7 +213,9 @@ button:focus {
 .btn-start:hover,
 .btn-start:active,
 .btn-start:focus {
-  /* padding-left: 13px; */
+
+  padding-left: 13px;
+
 }
 
 input {
@@ -149,6 +234,13 @@ input {
   display: flex;
   
 }
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
 
 input:focus {
   background-color: #205370;

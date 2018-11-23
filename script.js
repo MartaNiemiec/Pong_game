@@ -16,8 +16,10 @@ const topCanvas = canvas.offsetTop;
 const ballRadius = 10;
 let ballX = cwHalf;
 let ballY = chHalf;
-let ballSpeedX = 4;
-let ballSpeedY = 4;
+
+let ballSpeedX = (3.5+Math.random()) * ((3.5+Math.random()) < 4 ? -1 : 1); // between 3.5 and 4.5 ; positive or negative 
+let ballSpeedY = ballSpeedX;
+
 
 //PLAYERS
 const playerX = 50;
@@ -34,6 +36,18 @@ let playerScore = 0;
 let aiScore = 0;
 
 let int;
+
+let aiAccelerating = {
+    slow: 0,
+    medium: 0,
+    fast: 0
+}
+
+let ballMaxSpeed = 0;
+
+// WINNING SCORE
+let winningScore;
+
 
 // DRAWING PADDLES
 function player() {
@@ -61,30 +75,41 @@ function playerPosition(e) {
     }
 }
 
+
 function aiPosition() {
     const middlePaddle = aiY + paddleHeight / 2 ;
     
     // when the ball is on the ai side 
     if (ballX > cwHalf) {         
         if (middlePaddle - ballY > 180) {
-            aiY -= 15; 
+
+            aiY -= aiAccelerating.fast; 
+            // aiY -= 15; 
         } else if (middlePaddle - ballY > 40) {
-            aiY -= 7;
+            aiY -= aiAccelerating.medium;
+            // aiY -= 7;
         } else if (middlePaddle - ballY < -180) {
-            aiY += 15;
+            aiY += aiAccelerating.fast;
+            // aiY += 15;
         } else if (middlePaddle - ballY < -40) {
-            aiY += 7;
+            aiY += aiAccelerating.medium;
+            // aiY += 7;
+
         }
     }
 
     // when the ball is on the player's side 
     if (ballX <= cwHalf && ballX > 90) {
         if (middlePaddle - ballY > 90) {
-            aiY -= 3;
+
+            aiY -= aiAccelerating.slow;
+            // aiY -= 3;
         } 
         
         if (middlePaddle - ballY < -90) {
-            aiY += 3;
+            aiY += aiAccelerating.slow;
+            // aiY += 3;
+
         }
     }
 
@@ -136,16 +161,20 @@ function ball() {
     
 // BALL COLLISION WITH PADDLES
     if (ballX - ballRadius <= playerX + paddleWidth && 
-        ballY >= playerY && 
-        ballY <= playerY + paddleHeight) { 
+
+        ballY >= playerY - ballRadius && 
+        ballY <= playerY + paddleHeight + ballRadius) { 
+
     
         ballSpeedX = -ballSpeedX;
         speedUp();
     } 
     
     if (ballX + ballRadius  >= aiX && 
-        ballY >= aiY && 
-        ballY <= aiY + paddleHeight) {
+
+        ballY >= aiY - ballRadius && 
+        ballY <= aiY + paddleHeight + ballRadius) {
+
     
         ballSpeedX = -ballSpeedX;
         speedUp();
@@ -165,15 +194,19 @@ function ballStartPosition() {
 }
 
 function speedUp() {
-    if (ballSpeedX > 0 && ballSpeedX < 8) {
+
+    if (ballSpeedX > 0 && ballSpeedX < ballMaxSpeed) {
         ballSpeedX += .4;
-    } else if (ballSpeedX < 0 && ballSpeedX > -8) {
+        
+    } else if (ballSpeedX < 0 && ballSpeedX > -ballMaxSpeed) {
         ballSpeedX -= .4;
+        
     }
 
-    if (ballSpeedY > 0 && ballSpeedY < 8) {
+    if (ballSpeedY > 0 && ballSpeedY < ballMaxSpeed) {
         ballSpeedY += .4;
-    } else if (ballSpeedY < 0 && ballSpeedY > -8) {
+    } else if (ballSpeedY < 0 && ballSpeedY > -ballMaxSpeed) {
+
         ballSpeedY -= .4;
     }
 }
@@ -205,32 +238,41 @@ function schowScore () {
 
 // SET EVERYTHING FOR THE NEW ROUND
 function newRound() {
+
+    gameOver();
     schowScore();
     ballSpeed();
-    resetGame();
+    resetRound();
+
     clickToStart();
 }
 
 // ADD SCORE 
 function addScore() {
 
-    // add scor for the ai
+
+    // add score for the ai
+
     if (ballX - ballRadius <= 0) {
         clearInterval(int);
         aiScore++;
         newRound();
-    // add scor for the player
+
+    // add score for the player
+
     } else if (ballX + ballRadius >= cw) {
         clearInterval(int);
         playerScore++;
         newRound();
     }
+
 }
 
 // SET EVERYTHING ON THE CANVAS IN THE INITIAL PLACE
-function resetGame() {
-    ballSpeedX = 4;
-    ballSpeedY = 4;
+function resetRound() {
+    ballSpeedX = (3.5+Math.random()) * ((3.5+Math.random()) < 4 ? -1 : 1);;
+    ballSpeedY = ballSpeedX;
+
     ballStartPosition();
     playerY = 150;
     aiY = 150;
@@ -255,4 +297,117 @@ function start() {
     clickToStart();
 }
 
-    start();
+
+
+// WELCOME POPUP
+const welcomePopup = document.querySelector('.welcome')
+    // choosing game level
+    function gameLevel() {
+        const buttons = document.getElementsByClassName('btn');
+
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", function() {
+            var current = document.getElementsByClassName("btnActive");
+            if (current.length > 0) { 
+                current[0].className = current[0].className.replace(" btnActive", "");
+              }
+              this.className += " btnActive";
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            const target = e.target;
+            const level = target.dataset.level;
+
+            
+            if ( level === 'easy') { 
+                aiAccelerating.slow = 2;
+                aiAccelerating.medium = 4;
+                aiAccelerating.fast = 10;
+                ballMaxSpeed = 6;
+            } else if (level === 'medium') {
+                aiAccelerating.slow = 3;
+                aiAccelerating.medium = 7;
+                aiAccelerating.fast = 15;
+                ballMaxSpeed = 8;
+            } else if (level === 'expert') {
+                aiAccelerating.slow = 4;
+                aiAccelerating.medium = 9;
+                aiAccelerating.fast = 18;
+                ballMaxSpeed = 10;
+            }
+        })
+    }
+
+    // seting up winning score
+    function points() {
+        const input = document.querySelector('input[name=scoring]');
+        input.value = "";
+        input.addEventListener('input', () => {
+        winningScore = input.value; 
+        })
+    }
+
+
+    // starting game on button start click
+    function startGame() {
+        const startButton = document.querySelector('.btn-start'); 
+
+        startButton.addEventListener('click', () => {
+            if (aiAccelerating.slow > 0 && winningScore > 0){
+                welcomePopup.style.transform = "scale(0,0) rotate(720deg)";
+            }
+        })
+    }
+
+    function startingWelcomePopup() {
+        gameLevel();
+        points();
+        startGame();
+        start();
+    }
+
+    
+startingWelcomePopup();
+
+
+let playerTotalScore = 0;
+let aiTotalScore = 0;
+
+function resetGame() {
+    resetRound()
+    startingWelcomePopup();
+    welcomePopup.style.transform = "scale(1,1) rotate(-720deg)";
+    playerScore = 0;
+    aiScore = 0;
+    
+    console.log("playerTotalScore " + playerTotalScore);
+    console.log("aiTotalScore " + aiTotalScore);
+    
+}
+
+const winnerPopup = document.querySelector(".winner");
+let winner;
+
+function gameOver() {    
+    if (aiScore == winningScore) {
+        aiTotalScore++;
+        winner = "computer";
+        showTheWinner();
+        resetGame();
+    } else if (playerTotalScore == winningScore) {
+        playerTotalScore++;
+        winner = "player";
+        showTheWinner();
+        resetGame();
+    }
+
+} 
+
+function showTheWinner() {
+    winnerPopup.style.transform = "scale(1,1) rotate(-720deg)";
+    setTimeout(function() {winnerPopup.style.transform = "scale(0,0) rotate(720deg)";}, 2500);
+    document.querySelector('.winner__display-text').textContent = winner + "!!!";
+
+}
+

@@ -6,6 +6,9 @@
     
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/png" href="img/paddles4.png">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
     
 </head>
 <body>
@@ -23,17 +26,26 @@
         <img src="img/paddles4.png" alt="icon">
         <h2>Choose the level</h2>
         <div>
-            <button class="level-easy">easy</button>
-            <button class="level-medium">medium</button>
-            <button class="level-expert">expert</button>
+
+            <button data-level="easy" class="btn level-easy">easy</button>
+            <button data-level="medium" class="btn level-medium">medium</button>
+            <button data-level="expert" class="btn level-expert">expert</button>
         </div>
         <div>
-            <h4>Play up to<input type="text" name="scoring">points.</h4>
+            <h4>Play up to<input type="number" name="scoring">points.</h4>
         </div>
         <button class="btn-start">start!</button>
     </div>
+    <div class="winner">
+        <h1 class="winner__title">the winner is...</h1>
+        <!-- <i class="fas fa-trophy"></i>  -->
+        <h1 class="winner__display"><span class="winner__trophy">&#127942;</span><span class="winner__display-text"></span><span class="winner__trophy">&#127942;</span></h1>
+    </div>
+
     <canvas></canvas>
     
     <script src="script.js"></script>
 </body>
+
 </html>
+
