@@ -225,30 +225,33 @@ function schowScore () {
 
 // SET EVERYTHING FOR THE NEW ROUND
 function newRound() {
+    gameOver();
     schowScore();
     ballSpeed();
-    resetGame();
+    resetRound();
     clickToStart();
 }
 
 // ADD SCORE 
 function addScore() {
 
-    // add scor for the ai
+    // add score for the ai
     if (ballX - ballRadius <= 0) {
         clearInterval(int);
         aiScore++;
         newRound();
-    // add scor for the player
+    // add score for the player
     } else if (ballX + ballRadius >= cw) {
         clearInterval(int);
         playerScore++;
         newRound();
     }
+
+
 }
 
 // SET EVERYTHING ON THE CANVAS IN THE INITIAL PLACE
-function resetGame() {
+function resetRound() {
     ballSpeedX = (3.5+Math.random()) * ((3.5+Math.random()) < 4 ? -1 : 1);;
     ballSpeedY = ballSpeedX;
     ballStartPosition();
@@ -276,7 +279,8 @@ function start() {
 }
 
 
-// POPUP
+// WELCOME POPUP
+const welcomePopup = document.querySelector('.welcome')
     // choosing game level
     function gameLevel() {
         const buttons = document.getElementsByClassName('btn');
@@ -312,20 +316,18 @@ function start() {
                 aiAccelerating.fast = 18;
                 ballMaxSpeed = 10;
             }
-            console.log(aiAccelerating);
-            console.log("ballSpeedX " + ballSpeedX);
-            console.log("ballSpeedY " + ballSpeedY);
         })
     }
 
     // seting up winning score
     function points() {
         const input = document.querySelector('input[name=scoring]');
+        input.value = "";
         input.addEventListener('input', () => {
         winningScore = input.value; 
-        // console.log(winningScore);
         })
     }
+
 
     // starting game on button start click
     function startGame() {
@@ -333,14 +335,12 @@ function start() {
 
         startButton.addEventListener('click', () => {
             if (aiAccelerating.slow > 0 && winningScore > 0){
-                const popup = document.querySelector('.welcome');
-                popup.style.transform = "scale(0,0) rotate(720deg)";
-                // popup.style.transform = "translateY(-100%)";
+                welcomePopup.style.transform = "scale(0,0) rotate(720deg)";
             }
         })
     }
 
-    function startingPopup() {
+    function startingWelcomePopup() {
         gameLevel();
         points();
         startGame();
@@ -348,6 +348,45 @@ function start() {
     }
 
     
-startingPopup();
+startingWelcomePopup();
 
 
+let playerTotalScore = 0;
+let aiTotalScore = 0;
+
+function resetGame() {
+    resetRound()
+    startingWelcomePopup();
+    welcomePopup.style.transform = "scale(1,1) rotate(-720deg)";
+    playerScore = 0;
+    aiScore = 0;
+    
+    console.log("playerTotalScore " + playerTotalScore);
+    console.log("aiTotalScore " + aiTotalScore);
+    
+}
+
+const winnerPopup = document.querySelector(".winner");
+let winner;
+
+function gameOver() {    
+    if (aiScore == winningScore) {
+        aiTotalScore++;
+        winner = "computer";
+        showTheWinner();
+        resetGame();
+    } else if (playerTotalScore == winningScore) {
+        playerTotalScore++;
+        winner = "player";
+        showTheWinner();
+        resetGame();
+    }
+
+} 
+
+function showTheWinner() {
+    winnerPopup.style.transform = "scale(1,1) rotate(-720deg)";
+    setTimeout(function() {winnerPopup.style.transform = "scale(0,0) rotate(720deg)";}, 2500);
+    document.querySelector('.winner__display-text').textContent = winner + "!!!";
+
+}
