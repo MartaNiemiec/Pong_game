@@ -334,7 +334,8 @@ function start() {
         startButton.addEventListener('click', () => {
             if (aiAccelerating.slow > 0 && winningScore > 0){
                 const popup = document.querySelector('.welcome');
-                popup.style.display = "none";
+                popup.style.transform = "scale(0,0) rotate(720deg)";
+                // popup.style.transform = "translateY(-100%)";
             }
         })
     }
