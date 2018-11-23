@@ -16,8 +16,10 @@ const topCanvas = canvas.offsetTop;
 const ballRadius = 10;
 let ballX = cwHalf;
 let ballY = chHalf;
+
 let ballSpeedX = (3.5+Math.random()) * ((3.5+Math.random()) < 4 ? -1 : 1); // between 3.5 and 4.5 ; positive or negative 
 let ballSpeedY = ballSpeedX;
+
 
 //PLAYERS
 const playerX = 50;
@@ -34,6 +36,7 @@ let playerScore = 0;
 let aiScore = 0;
 
 let int;
+
 let aiAccelerating = {
     slow: 0,
     medium: 0,
@@ -44,6 +47,7 @@ let ballMaxSpeed = 0;
 
 // WINNING SCORE
 let winningScore;
+
 
 // DRAWING PADDLES
 function player() {
@@ -72,13 +76,13 @@ function playerPosition(e) {
 }
 
 
-
 function aiPosition() {
     const middlePaddle = aiY + paddleHeight / 2 ;
     
     // when the ball is on the ai side 
     if (ballX > cwHalf) {         
         if (middlePaddle - ballY > 180) {
+
             aiY -= aiAccelerating.fast; 
             // aiY -= 15; 
         } else if (middlePaddle - ballY > 40) {
@@ -90,12 +94,14 @@ function aiPosition() {
         } else if (middlePaddle - ballY < -40) {
             aiY += aiAccelerating.medium;
             // aiY += 7;
+
         }
     }
 
     // when the ball is on the player's side 
     if (ballX <= cwHalf && ballX > 90) {
         if (middlePaddle - ballY > 90) {
+
             aiY -= aiAccelerating.slow;
             // aiY -= 3;
         } 
@@ -103,6 +109,7 @@ function aiPosition() {
         if (middlePaddle - ballY < -90) {
             aiY += aiAccelerating.slow;
             // aiY += 3;
+
         }
     }
 
@@ -154,16 +161,20 @@ function ball() {
     
 // BALL COLLISION WITH PADDLES
     if (ballX - ballRadius <= playerX + paddleWidth && 
+
         ballY >= playerY - ballRadius && 
         ballY <= playerY + paddleHeight + ballRadius) { 
+
     
         ballSpeedX = -ballSpeedX;
         speedUp();
     } 
     
     if (ballX + ballRadius  >= aiX && 
+
         ballY >= aiY - ballRadius && 
         ballY <= aiY + paddleHeight + ballRadius) {
+
     
         ballSpeedX = -ballSpeedX;
         speedUp();
@@ -183,6 +194,7 @@ function ballStartPosition() {
 }
 
 function speedUp() {
+
     if (ballSpeedX > 0 && ballSpeedX < ballMaxSpeed) {
         ballSpeedX += .4;
         
@@ -194,6 +206,7 @@ function speedUp() {
     if (ballSpeedY > 0 && ballSpeedY < ballMaxSpeed) {
         ballSpeedY += .4;
     } else if (ballSpeedY < 0 && ballSpeedY > -ballMaxSpeed) {
+
         ballSpeedY -= .4;
     }
 }
@@ -225,28 +238,33 @@ function schowScore () {
 
 // SET EVERYTHING FOR THE NEW ROUND
 function newRound() {
+
     gameOver();
     schowScore();
     ballSpeed();
     resetRound();
+
     clickToStart();
 }
 
 // ADD SCORE 
 function addScore() {
 
+
     // add score for the ai
+
     if (ballX - ballRadius <= 0) {
         clearInterval(int);
         aiScore++;
         newRound();
+
     // add score for the player
+
     } else if (ballX + ballRadius >= cw) {
         clearInterval(int);
         playerScore++;
         newRound();
     }
-
 
 }
 
@@ -254,6 +272,7 @@ function addScore() {
 function resetRound() {
     ballSpeedX = (3.5+Math.random()) * ((3.5+Math.random()) < 4 ? -1 : 1);;
     ballSpeedY = ballSpeedX;
+
     ballStartPosition();
     playerY = 150;
     aiY = 150;
@@ -277,6 +296,7 @@ function start() {
     game();
     clickToStart();
 }
+
 
 
 // WELCOME POPUP
@@ -390,3 +410,4 @@ function showTheWinner() {
     document.querySelector('.winner__display-text').textContent = winner + "!!!";
 
 }
+

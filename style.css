@@ -19,10 +19,12 @@ canvas {
   border: 5px solid #C9FFD9; 
 }
 
+
 ::selection {
   background-color: rgb(102, 224, 255);
   color: #fff;
 }
+
 
 #players {
   padding-left: 3vh;
@@ -58,6 +60,7 @@ canvas {
   box-shadow: 5px 10px 18px #888888;
   margin-bottom: 1vh;
 }
+
 
 .winner {
   background-image: url("img/pattern.png");
@@ -121,14 +124,17 @@ canvas {
 
 
 
+
 .welcome {
   background-image: url("img/pattern.png");
   position: absolute;
   width: 100vw;
   height: 100vh;
   color: #fff;
+
   transition: all .6s;
   /* transform: scale(0,0); */
+
 
   display: grid;
   grid-gap: 20px;
@@ -169,17 +175,16 @@ button {
   box-shadow: 3px 10px 12px #0201013f;
 }
 
- button:hover
-/*button:active,
-button:focus  */
-{
+
+ button:hover {
+
   border: 3px solid white;
   background-color: transparent;
   color: #fff;
   transform: translateY(3px);
   box-shadow: none;
-
 }
+
 
 .btnActive {
   border: 3px solid white;
@@ -189,6 +194,7 @@ button:focus  */
   box-shadow: none;
 
 } 
+
 
 .btn-start {
   margin-top: 2rem;
@@ -207,7 +213,9 @@ button:focus  */
 .btn-start:hover,
 .btn-start:active,
 .btn-start:focus {
+
   padding-left: 13px;
+
 }
 
 input {
@@ -226,11 +234,13 @@ input {
   display: flex;
   
 }
+
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   margin: 0; 
 }
+
 
 input:focus {
   background-color: #205370;
