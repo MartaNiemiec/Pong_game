@@ -1,4 +1,5 @@
 // CANVAS
+(function() {
 const canvas = document.querySelector('canvas');
 const playerScoreText = document.querySelector('.score__player');
 const aiScoreText = document.querySelector('.score__ai');
@@ -12,19 +13,30 @@ const cwHalf = cw/2;
 const chHalf = ch/2;
 const topCanvas = canvas.offsetTop;
 
+// POPUPS
+const welcomePopup = document.querySelector('.welcome')
+const winnerPopup = document.querySelector(".winner");
+// title in a welcomePopup 
+const welcomeTitle = welcomePopup.firstElementChild;   
+
+// BALL SOUNDS
+const ballTable = document.querySelector(".audioBallTable");
+const ballPaddle = document.querySelector(".audioBallPaddle");
+const applause = document.querySelector(".applause");
+const lostGame = document.querySelector(".lostGame") 
+const winPoint = document.querySelector(".winPoint") 
+const lostPoint = document.querySelector(".lostPoint") 
+
 // BALL
 const ballRadius = 10;
 let ballX = cwHalf;
 let ballY = chHalf;
-
 let ballSpeedX = (3.5+Math.random()) * ((3.5+Math.random()) < 4 ? -1 : 1); // between 3.5 and 4.5 ; positive or negative 
 let ballSpeedY = ballSpeedX;
-
 
 //PLAYERS
 const playerX = 50;
 const aiX = 830;
-
 let playerY = 150;
 let aiY = 150;
 
@@ -32,21 +44,30 @@ let aiY = 150;
 const paddleHeight = 90;
 const paddleWidth = 15;
 
+// SCORES
 let playerScore = 0;
 let aiScore = 0;
+let playerTotalScore = 0;
+let aiTotalScore = 0;
 
+// WINNING SCORE
+let winningScore;
+
+//WINNER
+let winner;
+
+// INTERVAl function
 let int;
 
+// AI paddle acceleration changes depending on the game level
 let aiAccelerating = {
     slow: 0,
     medium: 0,
     fast: 0
 }
 
+// Ball's max speed changes depending on the game level
 let ballMaxSpeed = 0;
-
-// WINNING SCORE
-let winningScore;
 
 
 // DRAWING PADDLES
@@ -157,27 +178,26 @@ function ball() {
     if (ballY - ballRadius < 0 || ballY + ballRadius > ch) {
     ballSpeedY = -ballSpeedY;
     speedUp();
+    ballTable.play();
     }
     
 // BALL COLLISION WITH PADDLES
     if (ballX - ballRadius <= playerX + paddleWidth && 
-
         ballY >= playerY - ballRadius && 
         ballY <= playerY + paddleHeight + ballRadius) { 
 
-    
         ballSpeedX = -ballSpeedX;
         speedUp();
+        ballPaddle.play();
     } 
     
     if (ballX + ballRadius  >= aiX && 
-
         ballY >= aiY - ballRadius && 
         ballY <= aiY + paddleHeight + ballRadius) {
 
-    
         ballSpeedX = -ballSpeedX;
         speedUp();
+        ballPaddle.play();
     } 
 };
 
@@ -252,15 +272,15 @@ function addScore() {
 
 
     // add score for the ai
-
     if (ballX - ballRadius <= 0) {
+        lostPoint.play();
         clearInterval(int);
         aiScore++;
         newRound();
 
     // add score for the player
-
     } else if (ballX + ballRadius >= cw) {
+        winPoint.play();
         clearInterval(int);
         playerScore++;
         newRound();
@@ -298,86 +318,78 @@ function start() {
 }
 
 
-
 // WELCOME POPUP
-const welcomePopup = document.querySelector('.welcome')
-    // choosing game level
-    function gameLevel() {
-        const buttons = document.getElementsByClassName('btn');
+// choosing game level
+function gameLevel() {
+    const buttons = document.getElementsByClassName('btn');
 
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].addEventListener("click", function() {
-            var current = document.getElementsByClassName("btnActive");
-            if (current.length > 0) { 
-                current[0].className = current[0].className.replace(" btnActive", "");
-              }
-              this.className += " btnActive";
-            });
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function() {
+        var current = document.getElementsByClassName("btnActive");
+        if (current.length > 0) { 
+            current[0].className = current[0].className.replace(" btnActive", "");
+            }
+            this.className += " btnActive";
+        });
+    }
+
+    document.addEventListener('click', function(e) {
+        const target = e.target;
+        const level = target.dataset.level;
+
+        
+        if ( level === 'easy') { 
+            aiAccelerating.slow = 2;
+            aiAccelerating.medium = 4;
+            aiAccelerating.fast = 10;
+            ballMaxSpeed = 6;
+        } else if (level === 'medium') {
+            aiAccelerating.slow = 3;
+            aiAccelerating.medium = 7;
+            aiAccelerating.fast = 15;
+            ballMaxSpeed = 8;
+        } else if (level === 'expert') {
+            aiAccelerating.slow = 4;
+            aiAccelerating.medium = 9;
+            aiAccelerating.fast = 18;
+            ballMaxSpeed = 10;
         }
+    })
+}
 
-        document.addEventListener('click', function(e) {
-            const target = e.target;
-            const level = target.dataset.level;
-
-            
-            if ( level === 'easy') { 
-                aiAccelerating.slow = 2;
-                aiAccelerating.medium = 4;
-                aiAccelerating.fast = 10;
-                ballMaxSpeed = 6;
-            } else if (level === 'medium') {
-                aiAccelerating.slow = 3;
-                aiAccelerating.medium = 7;
-                aiAccelerating.fast = 15;
-                ballMaxSpeed = 8;
-            } else if (level === 'expert') {
-                aiAccelerating.slow = 4;
-                aiAccelerating.medium = 9;
-                aiAccelerating.fast = 18;
-                ballMaxSpeed = 10;
-            }
-        })
-    }
-
-    // seting up winning score
-    function points() {
-        const input = document.querySelector('input[name=scoring]');
-        input.value = "";
-        input.addEventListener('input', () => {
-        winningScore = input.value; 
-        })
-    }
+// setting up winning score
+function points() {
+    const input = document.querySelector('input[name=scoring]');
+    input.value = "";
+    input.addEventListener('input', () => {
+    winningScore = input.value; 
+    })
+}
 
 
-    // starting game on button start click
-    function startGame() {
-        const startButton = document.querySelector('.btn-start'); 
+// starting game on button start click
+function startGame() {
+    const startButton = document.querySelector('.btn-start'); 
 
-        startButton.addEventListener('click', () => {
-            if (aiAccelerating.slow > 0 && winningScore > 0){
-                welcomePopup.style.transform = "scale(0,0) rotate(720deg)";
-            }
-        })
-    }
+    startButton.addEventListener('click', () => {
+        if (aiAccelerating.slow > 0 && winningScore > 0){
+            welcomePopup.style.transform = "scale(0,0) rotate(720deg)";
+        }
+    })
+}
 
-    function startingWelcomePopup() {
-        gameLevel();
-        points();
-        startGame();
-        start();
-    }
-
-    
-startingWelcomePopup();
-
-
-let playerTotalScore = 0;
-let aiTotalScore = 0;
+function startingWelcomePopup() {
+    gameLevel();
+    points();
+    startGame();
+    start();
+}
 
 function resetGame() {
     resetRound()
     startingWelcomePopup();
     welcomePopup.style.transform = "scale(1,1) rotate(-720deg)";
+    welcomeTitle.innerHTML = "Want to play again?"; 
     playerScore = 0;
     aiScore = 0;
     
@@ -386,28 +398,31 @@ function resetGame() {
     
 }
 
-const winnerPopup = document.querySelector(".winner");
-let winner;
 
+// GAME OVER
 function gameOver() {    
     if (aiScore == winningScore) {
+        lostGame.play();
         aiTotalScore++;
         winner = "computer";
         showTheWinner();
         resetGame();
-    } else if (playerTotalScore == winningScore) {
+    } else if (playerScore == winningScore) {
+        applause.play();
         playerTotalScore++;
         winner = "player";
         showTheWinner();
         resetGame();
     }
-
 } 
 
+// POPUP SHOW THE WINNER
 function showTheWinner() {
     winnerPopup.style.transform = "scale(1,1) rotate(-720deg)";
-    setTimeout(function() {winnerPopup.style.transform = "scale(0,0) rotate(720deg)";}, 2500);
+    setTimeout(function() {winnerPopup.style.transform = "scale(0,0) rotate(720deg)";}, 3000);
     document.querySelector('.winner__display-text').textContent = winner + "!!!";
 
 }
 
+startingWelcomePopup();
+})();
