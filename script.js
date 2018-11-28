@@ -336,19 +336,18 @@ function gameLevel() {
     document.addEventListener('click', function(e) {
         const target = e.target;
         const level = target.dataset.level;
-
         
-        if ( level === 'easy') { 
+        if ( level == 'easy') { 
             aiAccelerating.slow = 2;
             aiAccelerating.medium = 4;
             aiAccelerating.fast = 10;
             ballMaxSpeed = 6;
-        } else if (level === 'medium') {
+        } else if (level == 'medium') {
             aiAccelerating.slow = 3;
             aiAccelerating.medium = 7;
             aiAccelerating.fast = 15;
             ballMaxSpeed = 8;
-        } else if (level === 'expert') {
+        } else if (level == 'expert') {
             aiAccelerating.slow = 4;
             aiAccelerating.medium = 9;
             aiAccelerating.fast = 18;
@@ -362,7 +361,7 @@ function points() {
     const input = document.querySelector('input[name=scoring]');
     input.value = "";
     input.addEventListener('input', () => {
-    winningScore = input.value; 
+        winningScore = input.value; 
     })
 }
 
@@ -392,10 +391,7 @@ function resetGame() {
     welcomeTitle.innerHTML = "Want to play again?"; 
     playerScore = 0;
     aiScore = 0;
-    
-    console.log("playerTotalScore " + playerTotalScore);
-    console.log("aiTotalScore " + aiTotalScore);
-    
+    winningScore = 0;    
 }
 
 
@@ -421,7 +417,6 @@ function showTheWinner() {
     winnerPopup.style.transform = "scale(1,1) rotate(-720deg)";
     setTimeout(function() {winnerPopup.style.transform = "scale(0,0) rotate(720deg)";}, 3000);
     document.querySelector('.winner__display-text').textContent = winner + "!!!";
-
 }
 
 startingWelcomePopup();
