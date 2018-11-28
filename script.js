@@ -1,5 +1,5 @@
 // CANVAS
-(function() {
+
 const canvas = document.querySelector('canvas');
 const playerScoreText = document.querySelector('.score__player');
 const aiScoreText = document.querySelector('.score__ai');
@@ -68,6 +68,14 @@ let aiAccelerating = {
 
 // Ball's max speed changes depending on the game level
 let ballMaxSpeed = 0;
+
+// LOCAL STORAGE
+const localStorageData = JSON.parse(localStorage.getItem('winnings')) || { 
+    // ai: [],
+    // player: [] 
+    ai: 0,
+    player: 0 
+}; 
 
 
 // DRAWING PADDLES
@@ -396,22 +404,36 @@ function resetGame() {
 
 
 // GAME OVER
-function gameOver() {    
+function gameOver() {   
+    
+
     if (aiScore == winningScore) {
         lostGame.play();
         aiTotalScore++;
         winner = "computer";
+        // localStorageData.ai.push(winningScore);
+        localStorageData.ai++;
         showTheWinner();
         resetGame();
+        storeData()
     } else if (playerScore == winningScore) {
         applause.play();
         playerTotalScore++;
         winner = "player";
+        // localStorageData.player.push(winningScore);
+        localStorageData.player++;
         showTheWinner();
         resetGame();
+        storeData();
     }
+    
 } 
 
+function storeData() {
+    localStorage.setItem("winnings", JSON.stringify(localStorageData));
+    console.log(JSON.parse(localStorage.getItem('winnings')));
+}
+ 
 // POPUP SHOW THE WINNER
 function showTheWinner() {
     winnerPopup.style.transform = "scale(1,1) rotate(-720deg)";
@@ -420,4 +442,5 @@ function showTheWinner() {
 }
 
 startingWelcomePopup();
-})();
+
+
