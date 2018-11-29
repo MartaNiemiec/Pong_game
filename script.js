@@ -18,6 +18,8 @@ const welcomePopup = document.querySelector('.welcome')
 const winnerPopup = document.querySelector(".winner");
 // title in a welcomePopup 
 const welcomeTitle = welcomePopup.firstElementChild;   
+//resetButton
+const resetButton = document.querySelector('.btn-reset');
 
 // BALL SOUNDS
 const ballTable = document.querySelector(".audioBallTable");
@@ -70,7 +72,7 @@ let aiAccelerating = {
 let ballMaxSpeed = 0;
 
 // LOCAL STORAGE
-const localStorageData = JSON.parse(localStorage.getItem('winnings')) || { 
+let localStorageData = JSON.parse(localStorage.getItem('winnings')) || { 
     // ai: [],
     // player: [] 
     ai: 0,
@@ -329,7 +331,7 @@ function start() {
 // WELCOME POPUP
 // choosing game level
 function gameLevel() {
-    const buttons = document.getElementsByClassName('btn');
+    const buttons = document.getElementsByClassName('level-btn');
 
     for (var i = 0; i < buttons.length; i++) {
         buttons[i].addEventListener("click", function() {
@@ -386,6 +388,7 @@ function startGame() {
 }
 
 function startingWelcomePopup() {
+    showWinnings();
     gameLevel();
     points();
     startGame();
@@ -405,7 +408,7 @@ function resetGame() {
 
 // GAME OVER
 function gameOver() {   
-    
+
 
     if (aiScore == winningScore) {
         lostGame.play();
@@ -429,11 +432,6 @@ function gameOver() {
     
 } 
 
-function storeData() {
-    localStorage.setItem("winnings", JSON.stringify(localStorageData));
-    console.log(JSON.parse(localStorage.getItem('winnings')));
-}
- 
 // POPUP SHOW THE WINNER
 function showTheWinner() {
     winnerPopup.style.transform = "scale(1,1) rotate(-720deg)";
@@ -444,3 +442,34 @@ function showTheWinner() {
 startingWelcomePopup();
 
 
+
+
+
+
+// LOCAL STORAGE
+function storeData() {
+    localStorage.setItem("winnings", JSON.stringify(localStorageData));
+    // console.log(JSON.parse(localStorage.getItem('winnings')));
+}
+
+// displaying winnings
+function showWinnings() {
+    const playerWinnings = document.querySelector('.welcome__winnings').firstElementChild.lastElementChild;
+    const aiWinnings = document.querySelector('.welcome__winnings').lastElementChild.lastElementChild;
+    JSON.parse(localStorage.getItem('winnings'))
+
+    aiWinnings.innerHTML = localStorageData.ai + "x&#127942;";
+    playerWinnings.innerHTML = localStorageData.player + "x&#127942;"
+}
+
+function resetScore() {
+    localStorageData = { 
+        ai: 0,
+        player: 0 
+    }; 
+    console.log("localStorage: " + JSON.stringify(localStorage));
+    console.log("localStorageData: " + JSON.stringify(localStorageData));
+    showWinnings();
+}
+
+resetButton.addEventListener('click', resetScore);

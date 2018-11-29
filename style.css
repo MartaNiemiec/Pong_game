@@ -160,6 +160,28 @@ canvas {
   display: flex;
 }
 
+.welcome__trophy {
+  text-shadow: 3px 10px 12px #0201013f;
+  color: gold;
+}
+
+.welcome__winnings {
+  display: flex;
+  width: 70%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.welcome__winnings h4 {
+  display: flex;
+  flex-direction: column;
+  letter-spacing: 0.2rem;
+}
+
+.welcome__buttons {
+  display: flex;
+}
+
 button {
   padding: 10px 15px;
   margin: 10px;
@@ -195,14 +217,11 @@ button {
 
 } 
 
-
-.btn-start {
+.btn {
   margin-top: 2rem;
   width: 6rem;
   height: 6rem;
-  padding-top: 13px; 
-  background: linear-gradient(to bottom, #CF0B0B, #8F0202);
-  color: white;
+  padding-top: 13px;
   border: none;
   border-radius: 50%;
 
@@ -210,9 +229,19 @@ button {
   justify-content: center;
 }
 
-.btn-start:hover,
-.btn-start:active,
-.btn-start:focus {
+.btn-start {
+  background: linear-gradient(to bottom, #CF0B0B, #8F0202);
+  color: white;
+}
+
+.btn-reset {
+  background: linear-gradient(to bottom, rgb(207, 155, 11), rgb(255, 217, 0));
+  color: white;
+}
+
+.btn:hover,
+.btn:active,
+.btn:focus {
 
   padding-left: 13px;
 

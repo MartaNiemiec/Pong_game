@@ -23,18 +23,27 @@
 
     <div class="welcome">
         <h1>Welcome to the pong game!</h1>
-        <img src="img/paddles4.png" alt="icon">
+        <section class="welcome__winnings">
+            <h4>Player: 
+                <span class="welcome__trophy">&#127942;</span>
+            </h4>
+            <img src="img/paddles4.png" alt="icon">
+            <h4>Computer: <span class="welcome__trophy">&#127942;</span></h4>
+        </section>
         <h2>Choose the level</h2>
         <div>
-
-            <button data-level="easy" class="btn level-easy">easy</button>
-            <button data-level="medium" class="btn level-medium">medium</button>
-            <button data-level="expert" class="btn level-expert">expert</button>
+            <button data-level="easy" class="level-btn level-easy">easy</button>
+            <button data-level="medium" class="level-btn level-medium">medium</button>
+            <button data-level="expert" class="level-btn level-expert">expert</button>
         </div>
         <div>
             <h4>Play up to<input type="number" name="scoring">points.</h4>
         </div>
-        <button class="btn-start">start!</button>
+        <section class="welcome__buttons">
+            <button class="btn btn-start">start!</button>
+            <button class="btn btn-reset">reset scores</button>
+        </section>
+        
     </div>
     <div class="winner">
         <h1 class="winner__title">the winner is...</h1>
