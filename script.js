@@ -463,6 +463,7 @@ function showWinnings() {
 }
 
 function resetScore() {
+    localStorage.clear();
     localStorageData = { 
         ai: 0,
         player: 0 
