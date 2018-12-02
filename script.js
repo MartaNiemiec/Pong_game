@@ -379,15 +379,24 @@ function points() {
 // starting game on button start click
 function startGame() {
     const startButton = document.querySelector('.btn-start'); 
-
     startButton.addEventListener('click', () => {
         if (aiAccelerating.slow > 0 && winningScore > 0){
             welcomePopup.style.transform = "scale(0,0) rotate(720deg)";
+            removeDisplayNone();
         }
     })
 }
 
+function addDisplayNone() {
+    canvas.classList.add('displayNone');
+}
+
+function removeDisplayNone() {
+    canvas.classList.remove('displayNone');
+}
+
 function startingWelcomePopup() {
+    addDisplayNone();
     showWinnings();
     gameLevel();
     points();
@@ -414,7 +423,6 @@ function gameOver() {
         lostGame.play();
         aiTotalScore++;
         winner = "computer";
-        // localStorageData.ai.push(winningScore);
         localStorageData.ai++;
         showTheWinner();
         resetGame();
@@ -423,7 +431,6 @@ function gameOver() {
         applause.play();
         playerTotalScore++;
         winner = "player";
-        // localStorageData.player.push(winningScore);
         localStorageData.player++;
         showTheWinner();
         resetGame();
@@ -434,8 +441,11 @@ function gameOver() {
 
 // POPUP SHOW THE WINNER
 function showTheWinner() {
+    addDisplayNone();
     winnerPopup.style.transform = "scale(1,1) rotate(-720deg)";
-    setTimeout(function() {winnerPopup.style.transform = "scale(0,0) rotate(720deg)";}, 3000);
+    setTimeout(function() {
+        winnerPopup.style.transform = "scale(0,0) rotate(720deg)";
+    }, 3000);
     document.querySelector('.winner__display-text').textContent = winner + "!!!";
 }
 
