@@ -11,6 +11,7 @@ Tennis game created with HTML Canvas and JavaScript.
 * [Technologies](#computer-technologies)
 * [Features](#bulb-features)
 * [Status](#question-status)
+* [Acknowledgements](#arrow_down-acknowledgements)
 
 ## :information_source: General info  
 Tennis game started with an unfinished youtube tutorial of a basic tennis game. [link](https://www.youtube.com/watch?v=8IJ_1QcqMdM&list=PLTs20Q-BTEMMSpaBeLpGECE3748o2MOFD). I set up my own design, added popups,local storage and more features. 
@@ -36,7 +37,7 @@ Tennis game started with an unfinished youtube tutorial of a basic tennis game. 
 ## :question: Status  
 Project no longer continued. :zzz: 
 
-## Acknowledgements
+## :arrow_down: Acknowledgements
 * [Sounds](http://www.findsounds.com)
 * [Digital font](https://www.dafont.com/digital-7.font)
 * [Fontawesome](https://fontawesome.com/)
